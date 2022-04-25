@@ -8,7 +8,6 @@ queue = Queue()
 
 
 class Shooter():
-
     def __init__(self, p, name):
         self.p = p
         self.i = 1
@@ -22,22 +21,24 @@ class Shooter():
 
 class ProducerThread(Thread):
     def run(self):
-        while True:
+        count_shoots = 0
+        while count_shoots < 20:
             i = random.randint(0, 5)
             queue.put(shoot[i])
-            print (f"Стреляет {shoot[i].name}  -  {shoot[i].i} раз \n")
+            print(f"Стреляет {shoot[i].name}  -  {shoot[i].i} раз \n")
             time.sleep(0.1)
-            if shoot[i].i == 10:
-                break
+            count_shoots += 1
 
 
 class ConsumerThread(Thread):
     def run(self):
-        while True:
+        shoot_consumed = 0
+        while shoot_consumed < 20:
             num = queue.get()
             queue.task_done()
             print (f"Вероятность попадания {num.i} выстрелов подряд -  {num.prb()} \n")
             time.sleep(0.1)
+            shoot_consumed += 1
 
 
 if __name__ == '__main__':
