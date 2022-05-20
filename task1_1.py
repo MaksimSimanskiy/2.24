@@ -29,7 +29,6 @@ class Package():
         print("--------------")
 
 
-
 class ProducerThread(Thread):
     def run(self):
         counter = 0
@@ -39,7 +38,7 @@ class ProducerThread(Thread):
             time.sleep(0.1)
             counter += 1
 
-
+            
 class ConsumerThread(Thread):
     def run(self):
         parsels_consumed = 0
