@@ -4,7 +4,7 @@ import math
 
 """
 Для своего индивидуального задания лабораторной работы 2.23 необходимо
-организировать конфейер, в которм сначала в отдельном потоке вычисляется значение
+организировать конфейер, в котором сначала в отдельном потоке вычисляется значение
 первой функции, после чего результаты вычисления должны передаваться второй функции,
 вычисляемой в отдельном потоке. Потоки для вычисления значений двух функций должны
 запускаться одновременно
@@ -15,37 +15,28 @@ qe = Queue()
 lock = Lock()
 
 
-def sum():
+def sum(x=-0.7):
     lock.acquire()
-    x = -0.7
-    pre = 0
-    s = 0
-    n = 0
-    curr = (n + 1) * math.pow(x, n)
-    s += curr
-    n += 1
-    while abs(curr - pre) > CONST_PRECISION:
-        pre = curr
-        curr = (n + 1) * math.pow(x, n)
+    n, s, m, curr = 0, 0, 0, 0
+    while True:
+        pre = (n + 1) * x**n
         n += 1
+        curr = (n + 1) * x**n
+        if abs(curr - pre) < CONST_PRECISION:
+            break
         s += curr
-    qe.put(s)
+        qe.put(s)
     lock.release()
 
-def compare(x, y):
-    result = x - y
-    print(f"Результат сравнения {result}")
 
-
-def func_y(x=-0.7):
+def func_y(x):
     result = 1/(math.pow((1 - x), 2))
-    return result
+    print(result)
 
 
 if __name__ == '__main__':
     t1 = Thread(target=sum).start()
-    t2 = Thread(target=compare(qe.get(), func_y())).start()
-
+    t2 = Thread(target=func_y(qe.get())).start()
 
 
 
